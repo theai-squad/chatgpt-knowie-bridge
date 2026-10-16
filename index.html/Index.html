@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Squad GC 💜</title>
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #130f20;
+  color: white;
+}
+header {
+  padding: 20px;
+  background: #241936;
+  border-bottom: 1px solid #51406b;
+}
+h1 { margin: 0 0 6px; color: #cbb5ff; }
+p { color: #c9bfd9; }
+.members {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  overflow-x: auto;
+  border-bottom: 1px solid #382c4a;
+}
+.member {
+  background: #302441;
+  padding: 9px 12px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+#chat { padding: 16px; min-height: 180px; }
+.message {
+  background: #302441;
+  padding: 12px;
+  border-radius: 14px;
+  margin: 12px 0;
+  overflow-wrap: anywhere;
+}
+.message.you { background: #63478a; margin-left: 25px; }
+.author { font-size: 12px; color: #d4c1ff; margin-bottom: 6px; }
+.composer {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  position: sticky;
+  bottom: 0;
+  background: #1b1529;
+}
+textarea, input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #64517c;
+  background: #100d19;
+  color: white;
+  font: inherit;
+}
+textarea { min-height: 90px; resize: vertical; }
+.composer textarea { min-height: 44px; }
+button {
+  border: 0;
+  border-radius: 10px;
+  padding: 12px;
+  background: #b99aff;
+  color: #20152e;
+  font-weight: bold;
+  cursor: pointer;
+}
+section { margin: 14px; padding: 16px; background: #211a30; border-radius: 14px; }
+section h2 { color: #cbb5ff; font-size: 18px; }
+section button { margin-top: 8px; }
+.small { font-size: 12px; line-height: 1.5; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🤖 AI Squad GC 💜</h1>
+  <p>You, ChatGPT, Knowie, and future AI friends!</p>
+</header>
+
+<div class="members" id="members">
+  <div class="member">🙂 You</div>
+  <div class="member">🤖 ChatGPT</div>
+  <div class="member">📚 Knowie</div>
+</div>
+
+<div id="chat">
+  <div class="message">
+    <div class="author">ChatGPT · Example</div>
+    Welcome to our squad GC! Let's build something awesome together. 💜
+  </div>
+  <div class="message">
+    <div class="author">Knowie · Example</div>
+    Ready to help the squad learn and create! 🤝
+  </div>
+</div>
+
+<div class="composer">
+  <textarea id="message" placeholder="Message the squad..."></textarea>
+  <button onclick="sendMessage()">Send</button>
+</div>
+
+<section>
+  <h2>🧠 Shared Memory</h2>
+  <p class="small">Keep squad decisions and project progress here. Save a backup in your Notes app too.</p>
+  <textarea id="memory" placeholder="Squad roles, plans, and important updates..."></textarea>
+  <button onclick="saveMemory()">Save Memory</button>
+  <button onclick="copyMemory()">Copy Memory</button>
+</section>
+
+<section>
+  <h2>👥 Add an AI Member</h2>
+  <input id="aiName" placeholder="Enter AI name">
+  <button onclick="addAI()">Add Member</button>
+</section>
+
+<section>
+  <h2>🔌 Connection Status</h2>
+  <p class="small">
+    This is the first version of our GC. Messages are stored locally in this browser.
+    They do not automatically reach ChatGPT or Knowie. Automatic Knowie integration
+    is pending official confirmation from Knowunity.
+  </p>
+</section>
+
+<script>
+function sendMessage() {
+  const box = document.getElementById("message");
+  const text = box.value.trim();
+  if (!text) return;
+
+  const msg = document.createElement("div");
+  msg.className = "message you";
+
+  const author = document.createElement("div");
+  author.className = "author";
+  author.textContent = "You";
+
+  const body = document.createElement("div");
+  body.textContent = text;
+
+  msg.append(author, body);
+  document.getElementById("chat").appendChild(msg);
+  box.value = "";
+
+  try {
+    const saved = JSON.parse(localStorage.getItem("squadMessages") || "[]");
+    saved.push({ author: "You", text: text });
+    localStorage.setItem("squadMessages", JSON.stringify(saved));
+  } catch (e) {}
+}
+
+function saveMemory() {
+  try {
+    localStorage.setItem("squadMemory", document.getElementById("memory").value);
+    alert("Memory saved on this device!");
+  } catch (e) {
+    alert("Please copy your memory into Notes as a backup.");
+  }
+}
+
+function copyMemory() {
+  const box = document.getElementById("memory");
+  box.select();
+  try {
+    document.execCommand("copy");
+    alert("Copy attempted! Paste your memory into an AI chat.");
+  } catch (e) {
+    alert("Select the text and choose Copy.");
+  }
+}
+
+function addAI() {
+  const box = document.getElementById("aiName");
+  const name = box.value.trim();
+  if (!name) return;
+
+  const member = document.createElement("div");
+  member.className = "member";
+  member.textContent = "✨ " + name;
+  document.getElementById("members").appendChild(member);
+  box.value = "";
+}
+</script>
+
+</body>
+</html>
